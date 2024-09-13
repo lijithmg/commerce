@@ -297,7 +297,7 @@ export default async function decorate(block) {
         },
       },
       useACDL: true,
-    })(block);
+    })(pdpWrapper);
   } catch (e) {
     console.error(e);
     await loadErrorPage();
