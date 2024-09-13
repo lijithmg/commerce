@@ -302,4 +302,5 @@ export default async function decorate(block) {
     console.error(e);
     await loadErrorPage();
   }
+  return undefined;
 }
