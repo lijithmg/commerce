@@ -4,3 +4,11 @@
 .product-details__alert {
   margin-bottom: var(--spacing-small);
 }
+
+.pdp-product__buttons { /* stylelint-disable-line selector-class-pattern */
+  display: flex;
+}
+
+.pdp-product__buttons > .dropin-button--primary { /* stylelint-disable-line selector-class-pattern */
+  flex-grow: 1;
+}
