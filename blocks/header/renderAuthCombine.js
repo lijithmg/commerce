@@ -20,8 +20,10 @@ const signInFormConfig = {
       const elem = document.createElement('div');
 
       authRenderer.render(SuccessNotification, {
-        headingText: `Welcome ${userName}!`,
-        messageText: 'You have successfully logged in.',
+        labels: {
+          headingText: `Welcome ${userName}!`,
+          messageText: 'You have successfully logged in.',
+        },
         slots: {
           SuccessNotificationActions: (innerCtx) => {
             const primaryBtn = document.createElement('div');
@@ -69,8 +71,10 @@ const signUpFormConfig = {
       const elem = document.createElement('div');
 
       authRenderer.render(SuccessNotification, {
-        headingText: 'Your account has been successfully created!',
-        messageText: 'You can login using sign-in page now.',
+        labels: {
+          headingText: 'Your account has been successfully created!',
+          messageText: 'You can login using sign-in page now.',
+        },
         slots: {
           SuccessNotificationActions: (innerCtx) => {
             const primaryBtn = document.createElement('div');
@@ -113,11 +117,20 @@ const resetPasswordFormConfig = {
 };
 
 const onHeaderLinkClick = () => {
+  const viewportMeta = document.querySelector('meta[name="viewport"]');
+  const originalViewportContent = viewportMeta.getAttribute('content');
+
   if (getCookie('auth_dropin_firstname')) {
     window.location.href = '/customer/account';
     return;
   }
   const signInModal = document.createElement('div');
+  document.body.style.overflow = 'hidden';
+  viewportMeta.setAttribute(
+    'content',
+    'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no',
+  );
+
   signInModal.setAttribute('id', 'auth-combine-modal');
   signInModal.classList.add('auth-combine-modal-overlay');
 
@@ -131,6 +144,8 @@ const onHeaderLinkClick = () => {
 
   signInModal.onclick = () => {
     signInModal.remove();
+    document.body.style.overflow = 'auto';
+    viewportMeta.setAttribute('content', originalViewportContent);
   };
 
   const signInForm = document.createElement('div');
@@ -178,6 +193,10 @@ const renderAuthCombine = (navSections) => {
       const authCombineNavElement = document.querySelector('.authCombineNavElement');
       if (isAuthenticated) {
         const { headerLoginButton, popupElement, popupMenuContainer } = getPopupElements();
+
+        if (!authCombineNavElement || !headerLoginButton || !popupElement || !popupMenuContainer) {
+          return;
+        }
 
         authCombineNavElement.style.display = 'none';
         popupMenuContainer.innerHTML = '';

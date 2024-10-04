@@ -7,14 +7,15 @@ import { Button } from '@dropins/tools/components.js';
 import * as authApi from '@dropins/storefront-auth/api.js';
 import { getCookie } from '../../scripts/configs.js';
 
-export default function decorate(block) {
+export default async function decorate(block) {
   const isAuthenticated = !!getCookie('auth_dropin_user_token');
 
   if (isAuthenticated) {
     window.location.href = '/customer/account';
   } else {
-    authRenderer.render(UpdatePassword, {
+    await authRenderer.render(UpdatePassword, {
       routeWrongUrlRedirect: () => '/customer/login',
+      routeSignInPage: () => '/customer/login',
       slots: {
         SuccessNotification: (ctx) => {
           const userName = ctx?.isSuccessful?.userName || '';
@@ -22,8 +23,10 @@ export default function decorate(block) {
           const elem = document.createElement('div');
 
           authRenderer.render(SuccessNotification, {
-            headingText: `Welcome ${userName}!`,
-            messageText: 'Your password has been successfully updated.',
+            labels: {
+              headingText: `Welcome ${userName}!`,
+              messageText: 'Your password has been successfully updated.',
+            },
             slots: {
               SuccessNotificationActions: (innerCtx) => {
                 const primaryBtn = document.createElement('div');
